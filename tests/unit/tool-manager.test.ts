@@ -6,6 +6,7 @@ import { describe, expect, it } from "vitest";
 import {
 	AGENT_TOOL_CATALOG,
 	ASK_USER_QUESTION_TOOL_NAME,
+	BASH_TOOL_NAME,
 	CONVERSATION_READ_TOOL_NAME,
 	PRESENT_FILES_TOOL_NAME,
 	SKILL_TOOL_NAME,
@@ -38,14 +39,15 @@ function fakeSet(initial: string[] = []) {
 }
 
 describe("catalog", () => {
-	it("共 25 个可开关工具（终端 7＋子代理 7＋其他 11）", () => {
-		expect(AGENT_TOOL_CATALOG).toHaveLength(25);
+	it("共 26 个可开关工具（终端 7＋子代理 7＋其他 11）", () => {
+		expect(AGENT_TOOL_CATALOG).toHaveLength(26);
 		expect(TERMINAL_TOOL_NAMES).toHaveLength(7);
 		expect(SUBAGENT_TOOL_NAMES).toHaveLength(7);
 	});
 
-	it("默认：终端组/edit_soft 关，其余开（与改动前行为一致）", () => {
+	it("默认：bash 开，terminal_*/edit_soft 关，其余开（与改动前行为一致）", () => {
 		const off = new Set(defaultDisabledAgentTools());
+		expect(off.has(BASH_TOOL_NAME)).toBe(false);
 		for (const n of TERMINAL_TOOL_NAMES) expect(off.has(n)).toBe(true);
 		expect(off.has("edit_soft")).toBe(true);
 		for (const n of SUBAGENT_TOOL_NAMES) expect(off.has(n)).toBe(false);
@@ -74,7 +76,7 @@ describe("normalize", () => {
 
 	it("isKnownAgentTool / isAgentToolEnabled", () => {
 		expect(isKnownAgentTool("subagent_spawn")).toBe(true);
-		expect(isKnownAgentTool("bash")).toBe(false);
+		expect(isKnownAgentTool("bash")).toBe(true);
 		expect(isAgentToolEnabled("edit_soft", ["edit_soft"])).toBe(false);
 		expect(isAgentToolEnabled("edit_soft", [])).toBe(true);
 	});
@@ -131,11 +133,10 @@ describe("legacy sync", () => {
 describe("tool_manage 出入口", () => {
 	it("setAgentToolEnabled 开关单个工具，未知名/未就绪返回 false", () => {
 		const s = fakeSet(["edit_soft", "bash"]);
-		expect(setAgentToolEnabled(s, "edit_soft", false)).toBe(true);
-		expect(s.peek()).toEqual(["bash"]);
-		expect(setAgentToolEnabled(s, "edit_soft", true)).toBe(true);
-		expect(s.peek()).toEqual(["bash", "edit_soft"]);
-		expect(setAgentToolEnabled(s, "bash", false)).toBe(false);
+		expect(setAgentToolEnabled(s, "bash", false)).toBe(true);
+		expect(s.peek()).toEqual(["edit_soft"]);
+		expect(setAgentToolEnabled(s, "bash", true)).toBe(true);
+		expect(s.peek()).toEqual(["edit_soft", "bash"]);
 		expect(setAgentToolEnabled(s, "nope", true)).toBe(false);
 		const broken = {
 			getActiveToolNames: () => {
@@ -150,7 +151,7 @@ describe("tool_manage 出入口", () => {
 		const s = fakeSet();
 		expect(setAgentToolsEnabled(s, [...TERMINAL_TOOL_NAMES], true)).toBe(7);
 		expect(s.peek()).toEqual([...TERMINAL_TOOL_NAMES]);
-		expect(setAgentToolsEnabled(s, ["bash"], true)).toBe(0);
+		expect(setAgentToolsEnabled(s, ["not_a_tool"], true)).toBe(0);
 	});
 
 	it("applyAgentToolsGating 全量重放：目录内加减、目录外不动", () => {
@@ -162,11 +163,11 @@ describe("tool_manage 出入口", () => {
 		expect(names).toContain("read");
 		for (const t of AGENT_TOOL_CATALOG) expect(names).toContain(t.name);
 		// 全部禁用：目录内剔除，目录外不动。
-		const s2 = fakeSet(["bash", "edit_soft", "subagent_spawn"]);
+		const s2 = fakeSet(["bash", "read", "edit_soft", "subagent_spawn"]);
 		applyAgentToolsGating(
 			s2,
 			AGENT_TOOL_CATALOG.map((t) => t.name),
 		);
-		expect(s2.peek()).toEqual(["bash"]);
+		expect(s2.peek()).toEqual(["read"]);
 	});
 });

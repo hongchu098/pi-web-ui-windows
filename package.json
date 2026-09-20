@@ -84,7 +84,7 @@
 	"dependencies": {
 		"@deepseek-ai/dsh-sdk-jsonrpc-server": "^0.1.1-rc.2",
 		"@deepseek-ai/dsh-sdk-protocol": "^0.1.1-rc.2",
-		"@earendil-works/pi-coding-agent": "^0.85.1",
+		"@earendil-works/pi-coding-agent": "^0.86.1",
 		"@xterm/addon-fit": "^0.11.0",
 		"@xterm/xterm": "^6.0.0",
 		"compression": "^1.8.2",
@@ -135,6 +135,11 @@
 		"vitest": "^5.0.1"
 	},
 	"allowScripts": {
-		"node-pty@1.1.0": true
+		"node-pty@1.1.0": true,
+		"@google/genai@1.52.0": true,
+		"esbuild@0.28.1": true,
+		"esbuild@0.28.2": true,
+		"protobufjs@7.6.5": true,
+		"electron-winstaller@5.4.0": true
 	}
 }

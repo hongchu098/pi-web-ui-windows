@@ -1025,6 +1025,8 @@
 		"wideChatDesc": "Activé : la colonne centrale occupe toute la largeur (utile sur très grand écran) ; désactivé : plafonnée à 860px",
 		"projectTitle": "Le titre affiche le nom du projet",
 		"projectTitleDesc": "Activé : l'onglet du navigateur affiche « nom du dossier projet — pi-web-ui », mis à jour dès que vous changez de projet (pratique avec plusieurs projets dans plusieurs onglets) ; désactivé : nom d'application fixe",
+		"bashEnabledDesc": "Autorise l’IA à exécuter des commandes shell avec l’outil bash. Lorsque cette option est désactivée, bash est retiré des outils actifs de la session en cours : l’IA ne peut alors ni le voir ni l’appeler. Sa réactivation prend effet immédiatement, sans rechargement.",
+		"bashOffHint": "Désactivé : l’IA ne peut pas utiliser bash. Le réglage de bash pris en charge par le terminal est conservé, mais reste sans effet tant que bash n’est pas réactivé.",
 		"terminalBashTakeover": "bash pris en charge par le terminal",
 		"terminalBashTakeoverDesc": "Cet interrupteur décide si bash est remplacé par la version terminal : coupé = bash natif du SDK (pur processus, pas de terminal) ; actif = exécuté dans le terminal visible, et le paramètre persist décide sur cette base entre unique (false, le processus quitte à la fin, sortie archivée) et persistant (true, l'état shell survit aux appels, bascule auto silencieuse en arrière-plan avec notification à l'IA)",
 		"terminalBashIdleMs": "Seuil de bascule silencieuse en arrière-plan (ms)",

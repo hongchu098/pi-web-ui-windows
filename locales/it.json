@@ -1025,6 +1025,8 @@
 		"wideChatDesc": "On: la colonna centrale riempie la larghezza (utile su monitor ultrawide); Off: mantiene il limite di 860px",
 		"projectTitle": "Mostra il nome del progetto nel titolo",
 		"projectTitleDesc": "On: il titolo della scheda del browser diventa \"<cartella progetto> — pi-web-ui\" e si aggiorna al cambio progetto (comodo con più schede aperte); Off: mostra sempre il nome dell'app",
+		"bashEnabledDesc": "Consente all’AI di eseguire comandi shell tramite lo strumento bash. Disattivandolo, bash viene rimosso dagli strumenti attivi della sessione corrente, quindi l’AI non può né vederlo né richiamarlo. La riattivazione ha effetto immediato senza bisogno di ricaricare.",
+		"bashOffHint": "Disattivato: l’AI non può usare bash. La preferenza per bash su terminale viene mantenuta, ma non ha effetto finché bash non viene riattivato.",
 		"terminalBashTakeover": "bash su terminale",
 		"terminalBashTakeoverDesc": "Questo interruttore decide se bash viene rimpiazzato da una versione terminale: OFF = bash nativo dell'SDK (spawn di processo, nessun terminale); ON = gira in un terminale visibile, dove il parametro persist decide (oltre all'interruttore) monouso (false — il processo esce quando il comando termina, output conservato) vs persistente (true — lo stato della shell è conservato tra le chiamate, i comandi silenziosi passano in background e notificano l'AI)",
 		"terminalBashIdleMs": "Soglia silenzio-in-background (ms)",

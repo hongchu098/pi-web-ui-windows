@@ -1165,6 +1165,10 @@ export const zh = {
 	projectTitle: "标题显示项目名",
 	projectTitleDesc:
 		"开启：浏览器标签页标题为「项目目录名 — pi-web-ui」，切项目即时更新（多标签页开多个项目时好区分）；关闭：固定显示应用名",
+	bashEnabledDesc:
+		"允许 AI 使用 bash 执行 shell 命令。关闭后 bash 会从当前会话的活动工具集中移除，模型无法看到或调用；重新开启立即恢复，无需 reload。",
+	bashOffHint:
+		"已关闭：AI 无法使用 bash；终端接管设置会保留，但在重新启用 bash 前不会生效。",
 	terminalBashTakeover: "终端接管 bash",
 	terminalBashTakeoverDesc:
 		"此开关决定 bash 是否覆盖为终端版：关 = 原生 SDK bash（纯进程、不开终端）；开 = 跑进可见终端，且 persist 参数在本开关的基础上决定一次性（false，命令跑完进程退出、输出留档）还是持久（true，shell 状态跨调用保留、静默自动转后台并通知 AI）",
@@ -2699,6 +2703,10 @@ const en: Record<keyof typeof zh, string> = {
 	projectTitle: "Show project name in title",
 	projectTitleDesc:
 		"On: the browser tab title becomes “<project folder> — pi-web-ui” and updates when you switch projects (handy with several tabs open); Off: always show the app name",
+	bashEnabledDesc:
+		"Allow the AI to execute shell commands with the bash tool. Turning it off removes bash from the current session's active tool set, so the model can neither see nor call it. Re-enabling takes effect immediately with no reload.",
+	bashOffHint:
+		"Disabled: the AI cannot use bash. The terminal-backed bash preference is preserved but has no effect until bash is enabled again.",
 	terminalBashTakeover: "Terminal-backed bash",
 	terminalBashTakeoverDesc:
 		"This switch decides whether bash is overridden to a terminal version: OFF = native SDK bash (process spawn, no terminal); ON = runs in a visible terminal, where the persist parameter decides (on top of the switch) one-shot (false — process exits when the command finishes, output retained) vs persistent (true — shell state retained across calls, silent commands move to the background and notify the AI)",

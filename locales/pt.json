@@ -1025,6 +1025,8 @@
 		"wideChatDesc": "Ligado: a coluna central ocupa toda a largura (útil em monitores ultrawide); Desligado: mantém o limite de 860px",
 		"projectTitle": "Mostrar nome do projeto no título",
 		"projectTitleDesc": "Ligado: o título da aba do navegador vira “<pasta do projeto> — pi-web-ui” e atualiza ao trocar de projeto (prático com várias abas abertas); Desligado: mostra sempre o nome do aplicativo",
+		"bashEnabledDesc": "Permite que a IA execute comandos do shell usando a ferramenta bash. Ao desativar, bash é removido do conjunto de ferramentas ativas da sessão atual, portanto a IA não poderá vê-lo nem chamá-lo. Ao reativar, ele volta imediatamente, sem necessidade de recarregar.",
+		"bashOffHint": "Desativado: a IA não pode usar bash. A preferência de bash baseado em terminal é preservada, mas não terá efeito até que bash seja ativado novamente.",
 		"terminalBashTakeover": "Terminal assumindo o bash",
 		"terminalBashTakeoverDesc": "Este interruptor decide se o bash é substituído por uma versão de terminal: OFF = bash SDK nativo (processo puro, sem terminal); ON = roda em um terminal visível, onde o parâmetro persist decide (além do interruptor) one-shot (false — o processo sai quando o comando termina, saída mantida) vs persistente (true — o estado do shell é mantido entre chamadas, comandos silenciosos vão para o segundo plano e notificam a IA)",
 		"terminalBashIdleMs": "Limite para virar segundo plano (ms)",

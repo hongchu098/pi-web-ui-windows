@@ -86,6 +86,7 @@ import { QUICK_PHRASE_DEFAULTS } from "../quick-phrases";
 import { DEFAULT_PROMPT_TEMPLATE, PROMPT_TOKENS, isReadonlyPromptSource } from "../../../server/prompt-composer.js";
 import {
 	ASK_USER_QUESTION_TOOL_NAME,
+	BASH_TOOL_NAME,
 	BROWSER_PAGE_TOOL_NAME,
 	CONVERSATION_READ_TOOL_NAME,
 	DELEGATE_TASK_TOOL_NAME,
@@ -1667,6 +1668,42 @@ export function SettingsModal({ chat, terminal, initialSection, onSwitchToTermin
 									onToggle={() => setPartial({ readDirEnabled: settings.readDirEnabled === false })}
 								/>
 								<div className="set-field-label">{t("toolsSectionTerminal")}</div>
+								<ToggleRow
+									title={BASH_TOOL_NAME}
+									tip={`${t("bashEnabledDesc")}\n${t("bashOffHint")}`}
+									enabled={!disabledTools.has(BASH_TOOL_NAME)}
+									onToggle={() => toggleAgentTool(BASH_TOOL_NAME)}
+								/>
+								{!disabledTools.has(BASH_TOOL_NAME) && (
+									<>
+										<ToggleRow
+											title={t("terminalBashTakeover")}
+											tip={t("terminalBashTakeoverDesc")}
+											enabled={settings.terminalBash}
+											onToggle={() => setPartial({ terminalBash: !settings.terminalBash })}
+										/>
+										{settings.terminalBash && (
+											<FieldRow label={t("terminalBashIdleMs")} htmlFor="tb-idle-ms">
+												<input
+													id="tb-idle-ms"
+													className="set-input"
+													type="number"
+													min={0}
+													step={1000}
+													value={idleMsDraft}
+													onChange={(e) => setIdleMsDraft(e.target.value)}
+													onBlur={() => {
+														const n = Math.max(0, Math.floor(Number(idleMsDraft) || 0));
+														setIdleMsDraft(String(n));
+														if (n !== settings.terminalBashIdleMs) {
+															setPartial({ terminalBashIdleMs: n });
+														}
+													}}
+												/>
+											</FieldRow>
+										)}
+									</>
+								)}
 								{TERMINAL_TOOL_NAMES.map((n) => (
 									<ToggleRow
 										key={n}
@@ -1676,32 +1713,7 @@ export function SettingsModal({ chat, terminal, initialSection, onSwitchToTermin
 										onToggle={() => toggleAgentTool(n)}
 									/>
 								))}
-								<ToggleRow
-									title={t("terminalBashTakeover")}
-									tip={t("terminalBashTakeoverDesc")}
-									enabled={settings.terminalBash}
-									onToggle={() => setPartial({ terminalBash: !settings.terminalBash })}
-								/>
-								{settings.terminalBash && (
-									<FieldRow label={t("terminalBashIdleMs")} htmlFor="tb-idle-ms">
-										<input
-											id="tb-idle-ms"
-											className="set-input"
-											type="number"
-											min={0}
-											step={1000}
-											value={idleMsDraft}
-											onChange={(e) => setIdleMsDraft(e.target.value)}
-											onBlur={() => {
-												const n = Math.max(0, Math.floor(Number(idleMsDraft) || 0));
-												setIdleMsDraft(String(n));
-												if (n !== settings.terminalBashIdleMs) {
-													setPartial({ terminalBashIdleMs: n });
-												}
-											}}
-										/>
-									</FieldRow>
-								)}
+
 								<div className="set-field-label">
 									{t("toolsSectionSubagent")} <HintTip text={t("toolsSubagentDepHint")} />
 								</div>

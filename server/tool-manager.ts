@@ -27,6 +27,10 @@ export const TERMINAL_TOOL_NAMES = [
 	"terminal_wait",
 ] as const;
 
+/** Shell 命令工具；实现由 pi-web-ui 的 adaptive bash 覆盖 SDK 内置 bash。 */
+export const BASH_TOOL_NAME = "bash";
+
+
 /** 第一方子代理工具（定义见 subagents.ts，逐个可关）。 */
 export const SUBAGENT_TOOL_NAMES = [
 	"subagent_spawn",
@@ -78,9 +82,18 @@ export interface AgentToolEntry {
 	dshVisible: boolean;
 }
 
-/** 可开关的 Agent 工具总目录（共 25 个；bash 本体与 SDK 内置 edit/read
- *  不进目录——关了 agent 就残了，不给关）。 */
+/** 可开关的 Agent 工具总目录。
+ * bash 可单独关闭；SDK 内置 edit/read 仍不进目录。
+ */
 export const AGENT_TOOL_CATALOG: AgentToolEntry[] = [
+	// bash 与 terminal_* 不共用 legacy terminalToolsEnabled。
+	// 默认保持开启，与当前版本行为一致。
+	{
+		name: BASH_TOOL_NAME,
+		group: "terminal",
+		defaultOn: true,
+		dshVisible: true,
+	},
 	...TERMINAL_TOOL_NAMES.map((name): AgentToolEntry => ({
 		name,
 		group: "terminal",
@@ -188,7 +201,7 @@ export function setAgentToolsEnabled(session: ActiveToolSet, names: readonly str
 
 /**
  * 全量重放（创建会话 / reload 后 / 设置变更后调）：按禁用名单把目录内工具
- * 逐个加回或剔除；目录外的工具（bash/SDK 内置/插件工具）原样不动。
+ * 逐个加回或剔除；目录外的工具（SDK 内置 edit/read、插件工具等）原样不动。
  * Session 未就绪时静默跳过（下次创建/reload 会再应用）。
  */
 export function applyAgentToolsGating(session: ActiveToolSet, disabled: readonly string[]): void {

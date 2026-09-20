@@ -1025,6 +1025,8 @@
 		"wideChatDesc": "Aktiviert: Die mittlere Spalte füllt die Breite aus (nützlich auf Ultrawide-Bildschirmen); Deaktiviert: Begrenzung auf 860px beibehalten",
 		"projectTitle": "Projektnamen im Titel anzeigen",
 		"projectTitleDesc": "Aktiviert: Der Browser-Tab-Titel lautet Projektordnername — pi-web-ui und wird beim Projektwechsel sofort aktualisiert (praktisch, wenn mehrere Projekte in mehreren Tabs geöffnet sind); Deaktiviert: Fester Anwendungsname",
+		"bashEnabledDesc": "Erlaubt der KI, Shell-Befehle mit dem bash-Werkzeug auszuführen. Beim Deaktivieren wird bash aus den aktiven Werkzeugen der aktuellen Sitzung entfernt, sodass die KI es weder sehen noch aufrufen kann. Das erneute Aktivieren wirkt sofort und erfordert kein Neuladen.",
+		"bashOffHint": "Deaktiviert: Die KI kann bash nicht verwenden. Die Einstellung für terminalgestütztes bash bleibt erhalten, hat jedoch keine Wirkung, bis bash wieder aktiviert wird.",
 		"terminalBashTakeover": "Terminal übernimmt bash",
 		"terminalBashTakeoverDesc": "Dieser Schalter entscheidet, ob bash durch die Terminal-Variante ersetzt wird: Aus = natives SDK-bash (reiner Prozess, kein Terminal); Ein = Ausführung im sichtbaren Terminal, wobei der Parameter persist darauf aufbauend über einmalig (false, der Prozess endet nach Befehlsende, die Ausgabe bleibt erhalten) oder persistent (true, Shell-Zustand bleibt über Aufrufe erhalten, stille Befehle wandern automatisch in den Hintergrund und benachrichtigen die KI) entscheidet",
 		"terminalBashIdleMs": "Schwelle für Stille bis Hintergrundbetrieb (Millisekunden)",
