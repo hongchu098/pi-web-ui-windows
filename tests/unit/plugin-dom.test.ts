@@ -6,12 +6,13 @@
  * - isDomBundleBlocked：wantsDom && !granted 才拦；未知插件（未声明）永远放行。
  * - PluginDomConsent：授权/撤销返回值、落盘与重读、坏 JSON 当空表、空 id 拒绝。
  */
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { PluginDomConsent, declarationWantsDom, isDomBundleBlocked } from "../../server/plugin-dom.js";
 import { PluginManager } from "../../server/plugins.js";
+import { trackPluginBroadcasts } from "./helpers/plugin-broadcasts.js";
 
 describe("declarationWantsDom", () => {
 	it.each([
@@ -75,6 +76,7 @@ describe("PluginDomConsent", () => {
 describe("PluginManager 集成：scan 标记 + 门禁 + 授权", () => {
 	let pdir = "";
 	let mgr: PluginManager;
+	let drainBroadcasts: () => Promise<void>;
 
 	function makePlugin(id: string, manifest: Record<string, unknown>): void {
 		mkdirSync(join(pdir, "plugins", id, "client"), { recursive: true });
@@ -88,11 +90,21 @@ describe("PluginManager 集成：scan 标记 + 门禁 + 授权", () => {
 		mkdirSync(join(pdir, "plugins"), { recursive: true });
 		// pluginsDir = <dataDir>/plugins，consent 落 <dataDir>/plugin-dom.json。
 		mgr = new PluginManager(pdir, pdir);
+		drainBroadcasts = trackPluginBroadcasts(mgr);
 	});
 
-	afterEach(() => {
-		mgr.dispose();
-		rmSync(pdir, { recursive: true, force: true });
+	afterEach(async () => {
+		try {
+			await drainBroadcasts();
+		} finally {
+			mgr.dispose();
+			try {
+				await drainBroadcasts();
+			} finally {
+				vi.restoreAllMocks();
+				rmSync(pdir, { recursive: true, force: true });
+			}
+		}
 	});
 
 	it("未授权：scan 标 wantsDom + 置灰 error，门禁拦 bundle", async () => {

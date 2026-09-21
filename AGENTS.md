@@ -274,6 +274,8 @@ npm publish
 
 ## 9. 常见坑
 
+- **pi SDK 来源（上游 #260）**：默认加载自带依赖；升级全局 pi CLI 不改变本服务的 SDK。`server/sdk-origin.ts` 提供副本诊断，`server/resolve-global-sdk.ts` 在 `PI_WEB_SDK=global` 时选择祖先目录中更新的副本；CLI、平台服务启动脚本与桌面侧车必须在 SDK 静态 import 之前加载钩子。`/api/health` 的 `piVersion` 表示实际生效版本，`piSdkCopies` 用于定位副本。回归：`sdk-origin` / `resolve-global-sdk` / `systemd-install` 单测。
+
 - **服务活着时跑 `npm run build` 会黑屏**：vite 先清空 `web/dist` 再写新文件，构建窗口内打开页面，`index.html` 与 hash 产物对不上；旧版里缺失的产物会穿透 `express.static` 落进 SPA catch-all 回 200 的 HTML，浏览器当 JS 执行失败，且 SW 会把它按 200 缓进 STATIC_CACHE（之后服务恢复了也好不了，必须 Unregister SW）。正确姿势：先停服务 → build → 启动 → 黑页标签 Unregister SW 后重载。服务端已加 `/assets/*` 等缺失 404（不再回 HTML）、SW 只缓存 content-type 对得上的资源。
 
 - **改了 `protocol.ts` 后忘了在两端 dispatch/onmessage switch 加分支** → 前端收到未知消息类型被 switch 静默丢弃，表现为"没反应"。先跑 `npm run typecheck`。

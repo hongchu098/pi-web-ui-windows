@@ -7,8 +7,28 @@
 格式说明：`Added` 新增功能、`Fixed` 修复、`Changed` 行为/样式变更、`i18n` 多语言相关。
 每个版本的内容按"实际合入该版本发布的提交"归档（以 `package.json` 的 version 变更提交为准），
 而不是按提交日期聚类——连续快速发布的 patch 版本以此为准最准确。
+移植上游修复的条目须注明上游 issue 号与 patch ID（上游提交 SHA），并附对应链接；本分支追加的适配需明确标注。
 
 ## [Unreleased]
+
+## [0.92.0-webui4win.1] — 未发布
+
+### Added
+
+- **设置「工具」页新增 bash 独立开关** —— 默认开启，可单独关闭模型的 `bash` 工具，便于 Windows 用户按需使用终端工具执行 PowerShell 命令。该开关与 `terminal_*` 工具开关独立；关闭 bash 时保留「终端接管 bash」偏好，重新开启后继续沿用原设置。
+
+### Fixed
+
+- **SDK 解析钩子的启动兼容性（本分支追加适配）** —— 基于上游 issue [#260](https://github.com/xing-shuyin/pi-web-ui/issues/260)、patch [3e97d51](https://github.com/xing-shuyin/pi-web-ui/commit/3e97d5128117d4034f4828a75126f0a8298a98f5)，将 Windows 服务、快捷方式及桌面侧车的 `--import` 参数转换为文件 URL，避免盘符路径触发 `ERR_UNSUPPORTED_ESM_URL_SCHEME`；修正 macOS/Linux 快捷脚本的参数引用，并在安装服务时保存 `PI_WEB_SDK` 设置。
+
+### Changed
+
+- **应用上游 pi SDK 来源与选择修复**（上游 issue [#260](https://github.com/xing-shuyin/pi-web-ui/issues/260)，patch ID：[3e97d5128117d4034f4828a75126f0a8298a98f5](https://github.com/xing-shuyin/pi-web-ui/commit/3e97d5128117d4034f4828a75126f0a8298a98f5)）—— 撤回本分支单独升级 SDK 的依赖与锁文件变更，改用上游范围 `>=0.85.1 <0.87.0`。默认仍使用自带副本；启动横幅提示被遮蔽的更新副本，`/api/health` 新增 `piSdkCopies` 诊断信息；显式设置 `PI_WEB_SDK=global` 可使用祖先目录中更新的 SDK，否则回落自带副本。CLI、平台服务启动脚本与桌面侧车接入解析钩子。本次仓库变更不修改本机已安装的包。
+- **Windows 分支说明** —— README 改为本分支简介与待办列表，安装和使用说明链接到上游项目。
+
+### i18n
+
+- bash 工具开关及说明补齐中文、英文与 8 个可下载语言包。
 
 ## [0.92.0] — 2026-09-20
 

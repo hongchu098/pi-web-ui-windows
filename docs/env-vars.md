@@ -3,6 +3,7 @@
 | 变量 | 默认 | 作用 |
 | --- | --- | --- |
 | `PI_WEB_PORT` | `8787` | HTTP 端口 |
+| `PI_WEB_SDK` | `bundled` | 使用哪一份 pi SDK：默认使用自带副本；`global` 通过启动解析钩子优先采用祖先目录中更新的副本，找不到则回落自带副本。CLI、平台服务启动脚本及桌面侧车自动加载钩子；直接运行时用 `node --import ./dist/server/resolve-global-sdk.js dist/server/index.js`（Windows 绝对路径需转成 `file:///` URL）。安装服务时保存该变量，已有服务需重新安装以更新设置。修改后需重启服务。 |
 | `PI_WEB_CWD` | `process.cwd()` | 智能体工作区（读/写/终端都以此为根） |
 | `PI_WEB_DATA_DIR` | `~/.pi-web` | 每客户端持久化 UI 状态（client-state.json，最近项目/工作目录）；对话会话放 SDK 默认目录 `<agentDir>/sessions/--<cwd>--/`（与 pi CLI/TUI 共享同一对话列表） |
 | `PI_WEB_INLINE_FILE_MAX` | `12288` (12KB) | inline 附件的内联阈值，超过自动降级为路径引用 |

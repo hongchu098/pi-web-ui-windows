@@ -18,7 +18,8 @@
  *     与顶栏溢出已由 `tests/unit/ui-slots.test.ts` 覆盖，这里不重复。
  *   - 不测 `pushToAll()` 的广播内容（要造 ws sender，属协议/端到端层，见 `tests/plugin-topbar-ui-test.mjs`）。
  *     register/update/remove/arrange 触发的 `void pushToAll()` 未 await，但它只重算 manifest 基线
- *     （uiBase），不碰 uiRuntime，因此断言 `host.ui.list()` 不受该竞态影响。
+ *     （uiBase），不碰 uiRuntime，因此断言 `host.ui.list()` 不受该竞态影响；
+ *     teardown 等待所有广播结束再删临时目录，避免扫描在用例/worker 退出后继续报错。
  *   - 不测性能/并发。
  *
  * 与交接单描述不一致之处（一律以源码为准，逐条登记）：
@@ -45,6 +46,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { PluginManager, parseUiContributions, parseUiArrange, type PluginHost } from "../../server/plugins.js";
+import { trackPluginBroadcasts } from "./helpers/plugin-broadcasts.js";
 
 // ---------------------------------------------------------------------------
 // A. 纯函数解析
@@ -424,6 +426,7 @@ describe("parseUiArrange", () => {
 
 let dir: string;
 let mgr: PluginManager;
+let drainBroadcasts: () => Promise<void>;
 
 function makePlugin(id: string, manifest: Record<string, unknown>, body = ""): void {
 	const pdir = join(dir, "plugins", id);
@@ -453,12 +456,21 @@ beforeEach(() => {
 	dir = mkdtempSync(join(tmpdir(), "plugin-ui-test-"));
 	(globalThis as unknown as { __hosts: Record<string, PluginHost> }).__hosts = {};
 	mgr = new PluginManager(dir, dir);
+	drainBroadcasts = trackPluginBroadcasts(mgr);
 });
 
-afterEach(() => {
-	vi.restoreAllMocks();
-	mgr.dispose();
-	rmSync(dir, { recursive: true, force: true });
+afterEach(async () => {
+	try {
+		await drainBroadcasts();
+	} finally {
+		mgr.dispose();
+		try {
+			await drainBroadcasts();
+		} finally {
+			vi.restoreAllMocks();
+			rmSync(dir, { recursive: true, force: true });
+		}
+	}
 });
 
 describe("host.ui —— 能力门控", () => {
